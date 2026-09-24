@@ -12,7 +12,7 @@ export type ItemLabel = {
   entity_type_name: string;
   id: number;
   resource_url: string;
-}
+};
 
 export type ItemArtist = {
   name: string;
@@ -22,7 +22,7 @@ export type ItemArtist = {
   tracks: string;
   id: number;
   resource_url: string;
-}
+};
 
 export type ItemBasicInformation = {
   id: number;
@@ -38,33 +38,33 @@ export type ItemBasicInformation = {
   artists: ItemArtist[];
   genres: string[];
   styles: string[];
-}
+};
 
 export type ItemType = {
   id: number;
   instance_id: number;
   date_added: string;
   rating: number;
-  basic_information: ItemBasicInformation
+  basic_information: ItemBasicInformation;
   user_name: string;
-}
+};
 
 export type PaginationUrls = {
   last?: string;
   next?: string;
   first?: string;
-  prev?: string
-}
+  prev?: string;
+};
 
 export type Pagination = {
   page: number;
   pages: number;
   per_page: number;
-  items: number
-  urls: PaginationUrls
-}
+  items: number;
+  urls: PaginationUrls;
+};
 
 export type Collection = {
   pagination: Pagination;
-  releases: ItemType[]
-}
+  releases: ItemType[];
+};

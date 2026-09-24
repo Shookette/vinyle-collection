@@ -1,14 +1,14 @@
-import type { Collection, ItemType } from '../types/collection';
+import type { Collection, ItemType } from "../types/collection";
 
-const DISCOG_BASE_URL = 'https://api.discogs.com'
+const DISCOG_BASE_URL = "https://api.discogs.com";
 
 export async function fetchSpecificUserCollection(user: string): Promise<Collection | null> {
-  const response = await fetch(`${DISCOG_BASE_URL}/users/${user}/collection/folders/0/releases`)
+  const response = await fetch(`${DISCOG_BASE_URL}/users/${user}/collection/folders/0/releases`);
   if (!response.ok) {
-    return null
+    return null;
   }
 
-  return response.json()
+  return response.json();
 }
 
 export async function fetchNextCollectionPage(collection: Collection): Promise<Collection | null> {
@@ -16,12 +16,12 @@ export async function fetchNextCollectionPage(collection: Collection): Promise<C
     return null;
   }
 
-  const response = await fetch(collection.pagination.urls.next)
+  const response = await fetch(collection.pagination.urls.next);
   if (!response.ok) {
-    return null
+    return null;
   }
 
-  return response.json()
+  return response.json();
 }
 
 export async function fetchAllItemsFromACollection(collection: Collection): Promise<ItemType[]> {
@@ -31,7 +31,6 @@ export async function fetchAllItemsFromACollection(collection: Collection): Prom
   if (hasAlreadyFetchAllData) {
     return allItems;
   }
-
 
   let hasNext = true;
   let next = collection;
@@ -46,42 +45,42 @@ export async function fetchAllItemsFromACollection(collection: Collection): Prom
     allItems.push(...nextCollection.releases);
   }
 
-  return allItems
+  return allItems;
 }
 
 export async function fetchAllItemsForAllCollection() {
   const items = [];
 
-  const collectLaureAnne = await fetchSpecificUserCollection('laureanne.leneel');
+  const collectLaureAnne = await fetchSpecificUserCollection("laureanne.leneel");
   if (collectLaureAnne) {
     const itemsLaureAnne = await fetchAllItemsFromACollection(collectLaureAnne);
     for (const item of itemsLaureAnne) {
-      item.user_name = 'Laure-Anne';
-      items.push(item)
+      item.user_name = "Laure-Anne";
+      items.push(item);
     }
   }
 
-  const collectJeremy = await fetchSpecificUserCollection('shookete');
+  const collectJeremy = await fetchSpecificUserCollection("shookete");
   if (collectJeremy) {
     const itemsJeremy = await fetchAllItemsFromACollection(collectJeremy);
     for (const item of itemsJeremy) {
-      item.user_name = 'Jeremy';
-      items.push(item)
+      item.user_name = "Jeremy";
+      items.push(item);
     }
   }
 
   return items.sort((a, b) => {
-    const firstArtistA = a.basic_information.artists.at(0)?.name ?? '';
-    const firstArtistB = b.basic_information.artists.at(0)?.name ?? '';
+    const firstArtistA = a.basic_information.artists.at(0)?.name ?? "";
+    const firstArtistB = b.basic_information.artists.at(0)?.name ?? "";
 
     if (firstArtistA < firstArtistB) {
-      return -1
+      return -1;
     }
 
     if (firstArtistA > firstArtistB) {
-      return 1
+      return 1;
     }
 
-    return 0
+    return 0;
   });
 }

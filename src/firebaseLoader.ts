@@ -8,7 +8,7 @@ const firebaseConfig = {
   projectId: "vinyle-collection-dd6ca",
   storageBucket: "vinyle-collection-dd6ca.firebasestorage.app",
   messagingSenderId: "441120711872",
-  appId: "1:441120711872:web:9ccda73b0c2ac3dd21b925"
+  appId: "1:441120711872:web:9ccda73b0c2ac3dd21b925",
 };
 
 // Initialize Firebase
