@@ -7,7 +7,7 @@ type ItemProps = {
 
 const Item: FC<ItemProps> = ({ item }) => {
   return (
-    <div className="flex flex-col items-center gap-6 p-7 md:flex-row md:gap-8 rounded-2xl basis-1/3">
+    <div className="flex flex-col items-center w-full sm:basis-1 md:basis-1/3">
       <div>
         <img className="size-48 shadow-xl rounded-md" alt="album cover" src={item.basic_information.cover_image} />
       </div>

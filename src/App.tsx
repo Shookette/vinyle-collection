@@ -3,6 +3,7 @@ import "./App.css";
 import type { ItemType } from "./types/collection";
 import { fetchAllItemsForAllCollection } from "./hooks/fetchCollection";
 import Item from "./components/Item/Item";
+import { useLoading } from './context/LoadingContext';
 
 const randomFunction = (items: ItemType[]): void => {
   if (!items || items.length === 0) {
@@ -14,6 +15,7 @@ const randomFunction = (items: ItemType[]): void => {
 };
 
 function App() {
+  const { setLoading } = useLoading()
   const [collections, setCollections] = useState<ItemType[]>([]);
   const [categorieSelected, setCategorieSelected] = useState<string | undefined>();
   const categories = useMemo(
@@ -24,7 +26,7 @@ function App() {
   const collectionsFiltered = useMemo(
     () =>
       collections.filter((item) => {
-        if (!categorieSelected) {
+        if (!categorieSelected || categorieSelected === 'tous') {
           return true;
         }
 
@@ -34,8 +36,9 @@ function App() {
   );
 
   useEffect(() => {
-    fetchAllItemsForAllCollection().then((data) => setCollections(data));
-  }, []);
+    setLoading(true);
+    fetchAllItemsForAllCollection().then((data) => setCollections(data)).finally(() => setLoading(false));
+  }, [setLoading]);
 
   const randomItem = useCallback(() => {
     randomFunction(collectionsFiltered);
@@ -48,24 +51,17 @@ function App() {
         Random
       </button>
       <div className="flex">
-        <>
-          <button
-            key="categorie-tous"
-            className="rounded-none bg-sky-500 px-4 py-2 text-sm font-semibold text-white"
-            onClick={() => setCategorieSelected(undefined)}
-          >
-            Tous
-          </button>
+        <select name="categorie" id="categorie" onChange={(event) => setCategorieSelected(event.target.value)}>
+          <option key="tous" value="tous">Tous</option>
           {categories.map((categorie) => (
-            <button
+            <option
               key={categorie}
-              className="rounded-none bg-sky-500 px-4 py-2 text-sm font-semibold text-white"
-              onClick={() => setCategorieSelected(categorie)}
+              value={categorie}
             >
               {categorie}
-            </button>
+            </option>
           ))}
-        </>
+        </select>
       </div>
       <div className="flex flex-wrap">
         {collectionsFiltered.map((collection) => (
