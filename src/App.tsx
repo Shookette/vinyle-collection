@@ -3,6 +3,7 @@ import "./App.css";
 import type { ItemType } from "./types/collection";
 import { fetchAllItemsForAllCollection } from "./hooks/fetchCollection";
 import Item from "./components/Item/Item";
+import { useLoading } from './context/LoadingContext';
 
 const randomFunction = (items: ItemType[]): void => {
   if (!items || items.length === 0) {
@@ -14,6 +15,7 @@ const randomFunction = (items: ItemType[]): void => {
 };
 
 function App() {
+  const { setLoading } = useLoading()
   const [collections, setCollections] = useState<ItemType[]>([]);
   const [categorieSelected, setCategorieSelected] = useState<string | undefined>();
   const categories = useMemo(
@@ -34,8 +36,9 @@ function App() {
   );
 
   useEffect(() => {
-    fetchAllItemsForAllCollection().then((data) => setCollections(data));
-  }, []);
+    setLoading(true);
+    fetchAllItemsForAllCollection().then((data) => setCollections(data)).finally(() => setLoading(false));
+  }, [setLoading]);
 
   const randomItem = useCallback(() => {
     randomFunction(collectionsFiltered);
