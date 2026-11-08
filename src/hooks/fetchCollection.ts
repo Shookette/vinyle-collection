@@ -1,9 +1,8 @@
 import type { Collection, ItemType } from "../types/collection";
-
-const DISCOG_BASE_URL = "https://api.discogs.com";
+import { appConfig } from "../config";
 
 export async function fetchSpecificUserCollection(user: string): Promise<Collection | null> {
-  const response = await fetch(`${DISCOG_BASE_URL}/users/${user}/collection/folders/0/releases`);
+  const response = await fetch(`${appConfig.discogsBaseUrl}/users/${encodeURIComponent(user)}/collection/folders/0/releases`);
   if (!response.ok) {
     return null;
   }
@@ -49,22 +48,17 @@ export async function fetchAllItemsFromACollection(collection: Collection): Prom
 }
 
 export async function fetchAllItemsForAllCollection() {
-  const items = [];
+  const items: ItemType[] = [];
 
-  const collectLaureAnne = await fetchSpecificUserCollection("laureanne.leneel");
-  if (collectLaureAnne) {
-    const itemsLaureAnne = await fetchAllItemsFromACollection(collectLaureAnne);
-    for (const item of itemsLaureAnne) {
-      item.user_name = "Laure-Anne";
-      items.push(item);
+  for (const { username, label } of appConfig.collections) {
+    const collection = await fetchSpecificUserCollection(username);
+    if (!collection) {
+      continue;
     }
-  }
 
-  const collectJeremy = await fetchSpecificUserCollection("shookete");
-  if (collectJeremy) {
-    const itemsJeremy = await fetchAllItemsFromACollection(collectJeremy);
-    for (const item of itemsJeremy) {
-      item.user_name = "Jeremy";
+    const userItems = await fetchAllItemsFromACollection(collection);
+    for (const item of userItems) {
+      item.user_name = label;
       items.push(item);
     }
   }

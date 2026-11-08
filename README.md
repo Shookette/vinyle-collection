@@ -1,32 +1,40 @@
-# React + TypeScript + Vite
+# Vinyle Collection
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Affiche les collections Discogs d'un ou plusieurs utilisateurs.
 
-Currently, two official plugins are available:
+## Développement
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```sh
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+En local (et sur Firebase Hosting), la configuration est lue depuis `public/config.js`.
+
+## Déploiement Docker (ex : NAS)
+
+L'image sert l'application via nginx. La configuration est générée **au démarrage
+du conteneur** à partir des variables d'environnement : pas besoin de rebuilder
+l'image pour changer les collections.
+
+| Variable              | Défaut                    | Description                                                                 |
+| --------------------- | ------------------------- | --------------------------------------------------------------------------- |
+| `DISCOGS_BASE_URL`    | `https://api.discogs.com` | URL de l'API Discogs                                                        |
+| `DISCOGS_COLLECTIONS` | _(vide)_                  | Liste `utilisateur:Libellé` séparée par des virgules (libellé facultatif)  |
+
+### Avec docker compose
+
+```sh
+docker compose up -d --build
+```
+
+Puis ouvrir http://localhost:8080 (voir `docker-compose.yml` pour modifier le port et les variables).
+
+### Avec docker run
+
+```sh
+docker build -t vinyle-collection .
+docker run -d -p 8080:80 \
+  -e DISCOGS_COLLECTIONS="laureanne.leneel:Laure-Anne,shookete:Jeremy" \
+  vinyle-collection
+```
