@@ -19,7 +19,6 @@ RUN for v in VITE_DISCOGS_BASE_URL VITE_DISCOGS_COLLECTIONS; do \
 
 # --- Runtime ---
 # Tag "stable" maintenu + mise à jour des paquets Alpine (correctifs de sécurité).
-# L'image ne contient pas de serveur SSH (non concernée par CVE-2026-123158).
 FROM nginx:stable-alpine
 RUN apk upgrade --no-cache
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
