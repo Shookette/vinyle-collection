@@ -1,11 +1,12 @@
 services:
   vinyle-collection:
-    build: .
+    build:
+      context: .
+      # Facultatif : surcharge les valeurs du .env au moment du build
+      args:
+        VITE_DISCOGS_COLLECTIONS: "laureanne.leneel:Laure-Anne,shookete:Jeremy"
     image: vinyle-collection:latest
     container_name: vinyle-collection
     restart: unless-stopped
     ports:
       - "8080:80"
-    environment:
-      DISCOGS_BASE_URL: "https://api.discogs.com"
-      DISCOGS_COLLECTIONS: "laureanne.leneel:Laure-Anne,shookete:Jeremy"

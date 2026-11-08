@@ -4,16 +4,21 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
-RUN npm run build
+
+# Surcharges optionnelles des valeurs du .env (docker build --build-arg ...).
+# Pour une nouvelle variable, pas besoin de l'ajouter ici : la mettre dans
+# .env / .env.local suffit, Vite les lit automatiquement.
+ARG VITE_DISCOGS_BASE_URL
+ARG VITE_DISCOGS_COLLECTIONS
+
+# Les build args vides sont retirés pour ne pas écraser les valeurs du .env
+RUN for v in VITE_DISCOGS_BASE_URL VITE_DISCOGS_COLLECTIONS; do \
+      eval "[ -z \"\$$v\" ] && unset $v"; \
+    done; \
+    npm run build
 
 # --- Runtime ---
 FROM nginx:1.27-alpine
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
-COPY docker/40-generate-config.sh /docker-entrypoint.d/40-generate-config.sh
-RUN chmod +x /docker-entrypoint.d/40-generate-config.sh
 COPY --from=build /app/dist /usr/share/nginx/html
-
-ENV DISCOGS_BASE_URL="https://api.discogs.com" \
-    DISCOGS_COLLECTIONS=""
-
 EXPOSE 80
