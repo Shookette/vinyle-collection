@@ -1,32 +1,132 @@
 @import "tailwindcss";
 
+/*
+ * ============================================================
+ *  THÈME
+ *  Toutes les couleurs et tailles importantes sont ici.
+ *  Pour créer un autre thème, copie le bloc :root ci-dessous
+ *  dans un sélecteur (ex. [data-theme="retro"]) et change
+ *  uniquement les valeurs.
+ * ============================================================
+ */
 :root {
-  --text: #a4863b;
-  --text-h: #08060d;
-  --bg: #e6d5ed;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* --- Couleurs de base --- */
+  --page: #0b0a12; /* fond de la page */
+  --fg: #f5f5f7; /* texte principal */
+  --fg-muted: rgb(245 245 247 / 0.75); /* texte secondaire (artiste) */
+  --fg-subtle: rgb(245 245 247 / 0.5); /* texte discret (année, compteur) */
 
-  --sans: system-ui, "Segoe UI", Roboto, sans-serif;
-  --heading: system-ui, "Segoe UI", Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* --- Verre dépoli (barre du haut, panneau de la modale) --- */
+  --glass: rgb(0 0 0 / 0.3); /* fond de la barre du haut */
+  --glass-panel: rgb(255 255 255 / 0.1); /* fond du panneau de la modale */
+  --glass-border: rgb(255 255 255 / 0.15);
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
+  /* --- Petites surfaces (chips de filtre, tags) --- */
+  --surface: rgb(255 255 255 / 0.08);
+  --surface-hover: rgb(255 255 255 / 0.18);
+  --surface-border: rgb(255 255 255 / 0.2);
+
+  /* --- Bouton principal (Random, filtre actif) --- */
+  --primary: #ffffff;
+  --primary-hover: rgb(255 255 255 / 0.85);
+  --primary-fg: #000000;
+
+  /* --- Voiles et ombres --- */
+  --overlay: rgb(0 0 0 / 0.5); /* voile sur le fond flouté de la modale */
+  --overlay-strong: rgb(0 0 0 / 0.9); /* voile du loader */
+  --shadow: rgb(0 0 0 / 0.45);
+
+  /* --- Taches de couleur du fond --- */
+  --blob-1: rgb(192 38 211 / 0.4);
+  --blob-2: rgb(79 70 229 / 0.4);
+  --blob-3: rgb(249 115 22 / 0.25);
+
+  /* --- Tailles --- */
+  --cover-radius: 0.75rem; /* coins des pochettes de la grille */
+  --panel-radius: 1.5rem; /* coins du panneau de la modale */
+  --glass-blur: 24px; /* flou derrière le verre dépoli */
+  --bg-blur: 64px; /* flou des taches et de la pochette en fond */
+  --page-width: 80rem; /* largeur max du contenu sur grand écran */
+  --gutter: 1rem; /* marge gauche/droite de la page */
+  --loader-size: clamp(6rem, 30vmin, 16rem);
+
+  /* --- Police --- */
+  --font: system-ui, "Segoe UI", Roboto, sans-serif;
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --gutter: 1.5rem;
+  }
+}
+
+/*
+ * Exemple d'autre thème : décommente, puis ajoute data-theme="retro"
+ * sur la balise <html> dans index.html.
+ *
+ * [data-theme="retro"] {
+ *   --page: #2a1810;
+ *   --fg: #f4e4c1;
+ *   --primary: #e8572a;
+ *   --primary-fg: #f4e4c1;
+ *   --blob-1: rgb(232 87 42 / 0.45);
+ *   --blob-2: rgb(242 158 56 / 0.35);
+ *   --blob-3: rgb(244 201 93 / 0.3);
+ * }
+ */
+
+/*
+ * Branche les variables ci-dessus sur Tailwind : chaque ligne crée des classes utilisables.
+ * Ex. --color-fg-muted → text-fg-muted, bg-fg-muted… ; --radius-cover → rounded-cover.
+ * "inline" : Tailwind écrit var(--…) dans les classes, donc changer une variable suffit.
+ */
+@theme inline {
+  --color-page: var(--page);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-glass: var(--glass);
+  --color-glass-panel: var(--glass-panel);
+  --color-glass-border: var(--glass-border);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-border: var(--surface-border);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-fg: var(--primary-fg);
+  --color-overlay: var(--overlay);
+  --color-overlay-strong: var(--overlay-strong);
+  --color-shadow: var(--shadow);
+  --color-blob-1: var(--blob-1);
+  --color-blob-2: var(--blob-2);
+  --color-blob-3: var(--blob-3);
+
+  --radius-cover: var(--cover-radius);
+  --radius-panel: var(--panel-radius);
+  --blur-glass: var(--glass-blur);
+  --blur-bg: var(--bg-blur);
+  --container-page: var(--page-width);
+  --spacing-gutter: var(--gutter);
+  --spacing-loader: var(--loader-size);
+  --font-sans: var(--font);
+}
+
+html {
+  color-scheme: dark;
+  background: var(--page);
+  color: var(--fg);
+  font: 16px/1.45 var(--font);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+body {
+  min-height: 100dvh;
+}
+
+/* Bloque le défilement de la page tant qu'une modale est affichée. */
+html:has([aria-modal="true"]) {
+  overflow: hidden;
 }
