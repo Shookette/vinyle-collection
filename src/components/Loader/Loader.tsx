@@ -8,10 +8,15 @@ const Loader = () => {
     return <></>;
   }
 
-  return (<>
-    <div className='bg-black opacity-90 w-full h-full absolute'></div>
-    <img src={spinner} className='absolute top-[35%] left-[35%] animate-spin w-sm h-sm' alt="loader" />
-  </>);
+  return (
+    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/90'>
+      <img
+        src={spinner}
+        className='animate-spin aspect-square w-[clamp(6rem,30vmin,16rem)]'
+        alt="Chargement…"
+      />
+    </div>
+  );
 }
 
 export default Loader;
