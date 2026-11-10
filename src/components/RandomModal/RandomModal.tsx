@@ -35,55 +35,50 @@ const RandomModal: FC<RandomModalProps> = ({ item, onClose, onReroll }) => {
       onClick={onClose}
     >
       {/* Fond : la pochette agrandie et très floutée, puis un voile sombre pour garder le texte lisible. */}
-      <img
-        src={cover_image}
-        alt=""
-        aria-hidden
-        className="absolute inset-0 size-full scale-125 object-cover blur-3xl"
-      />
-      <div className="absolute inset-0 bg-black/50" />
+      <img src={cover_image} alt="" aria-hidden className="absolute inset-0 size-full scale-125 object-cover blur-bg" />
+      <div className="absolute inset-0 bg-overlay" />
 
       {/* stopPropagation : un clic dans le panneau ne doit pas fermer la modale. */}
       <div
-        className="relative flex max-h-full w-full max-w-sm flex-col overflow-y-auto gap-5 rounded-3xl border border-white/20 bg-white/10 p-5 shadow-2xl backdrop-blur-xl sm:max-w-3xl sm:flex-row sm:items-center sm:p-6"
+        className="relative flex max-h-full w-full max-w-sm flex-col overflow-y-auto gap-5 rounded-panel border border-glass-border bg-glass-panel p-5 shadow-2xl shadow-shadow backdrop-blur-glass sm:max-w-3xl sm:flex-row sm:items-center sm:p-6"
         onClick={(event) => event.stopPropagation()}
       >
         <img
           src={cover_image}
           alt={`Pochette de ${title}`}
-          className="aspect-square w-full rounded-2xl object-cover shadow-2xl shadow-black/50 sm:w-72"
+          className="aspect-square w-full rounded-cover object-cover shadow-2xl shadow-shadow sm:w-72"
         />
 
         <div className="flex min-w-0 flex-1 flex-col gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-white/60">Ce soir on écoute</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-fg-subtle">Ce soir on écoute</p>
             <h2 className="mt-1 text-2xl font-bold leading-tight sm:text-3xl">{title}</h2>
-            <p className="mt-1 text-lg text-white/80">{artists.map((artist) => artist.name).join(", ")}</p>
+            <p className="mt-1 text-lg text-fg-muted">{artists.map((artist) => artist.name).join(", ")}</p>
           </div>
 
           <div className="flex flex-wrap gap-2 text-xs">
-            {year > 0 && <span className="rounded-full bg-white/15 px-3 py-1">{year}</span>}
+            {year > 0 && <span className="rounded-full bg-surface-hover px-3 py-1">{year}</span>}
             {[...new Set([...genres, ...(styles ?? [])])].map((tag) => (
-              <span key={tag} className="rounded-full bg-white/15 px-3 py-1">
+              <span key={tag} className="rounded-full bg-surface-hover px-3 py-1">
                 {tag}
               </span>
             ))}
           </div>
 
-          <p className="text-sm text-white/60">Collection de {item.user_name}</p>
+          <p className="text-sm text-fg-subtle">Collection de {item.user_name}</p>
 
           <div className="flex gap-3">
             <button
               type="button"
               onClick={onReroll}
-              className="flex-1 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:bg-white/90 active:scale-95"
+              className="flex-1 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-fg transition hover:bg-primary-hover active:scale-95"
             >
               🎲 Un autre
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-full border border-white/30 px-4 py-2.5 text-sm font-semibold transition hover:bg-white/10 active:scale-95"
+              className="flex-1 rounded-full border border-surface-border px-4 py-2.5 text-sm font-semibold transition hover:bg-surface active:scale-95"
             >
               Fermer
             </button>

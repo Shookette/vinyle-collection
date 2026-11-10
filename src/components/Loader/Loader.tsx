@@ -1,5 +1,5 @@
-import { useLoading } from '../../context/LoadingContext'
-import spinner from "../../assets/spinner.svg"
+import { useLoading } from "../../context/LoadingContext";
+import spinner from "../../assets/spinner.svg";
 
 const Loader = () => {
   const { loading } = useLoading();
@@ -9,14 +9,10 @@ const Loader = () => {
   }
 
   return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/90'>
-      <img
-        src={spinner}
-        className='animate-spin aspect-square w-[clamp(6rem,30vmin,16rem)]'
-        alt="Chargement…"
-      />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-overlay-strong">
+      <img src={spinner} className="animate-spin aspect-square w-loader" alt="Chargement…" />
     </div>
   );
-}
+};
 
 export default Loader;

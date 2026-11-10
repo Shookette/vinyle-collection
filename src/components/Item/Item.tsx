@@ -14,15 +14,15 @@ const Item: FC<ItemProps> = ({ item }) => {
   return (
     <article className="group flex flex-col gap-2">
       <img
-        className="aspect-square w-full rounded-xl object-cover shadow-lg shadow-black/40 ring-1 ring-white/10 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-2xl"
+        className="aspect-square w-full rounded-cover object-cover shadow-lg shadow-shadow ring-1 ring-glass-border transition duration-300 group-hover:-translate-y-1 group-hover:shadow-2xl"
         alt={`Pochette de ${title}`}
         src={cover_image}
         loading="lazy"
       />
       <div className="min-w-0">
         <h2 className="truncate text-sm font-semibold sm:text-base">{title}</h2>
-        <p className="truncate text-xs text-white/70 sm:text-sm">{artistNames}</p>
-        <p className="text-xs text-white/45">
+        <p className="truncate text-xs text-fg-muted sm:text-sm">{artistNames}</p>
+        <p className="text-xs text-fg-subtle">
           {year || "Année inconnue"} · {item.user_name}
         </p>
       </div>

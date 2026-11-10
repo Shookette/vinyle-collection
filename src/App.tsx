@@ -46,12 +46,12 @@ function App() {
       <Background />
 
       {/* Barre du haut "collante" en verre dépoli : le seul gros élément flouté de la page. */}
-      <header className="sticky top-0 z-30 border-b border-white/10 bg-black/30 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 sm:px-6">
+      <header className="sticky top-0 z-30 border-b border-glass-border bg-glass backdrop-blur-glass">
+        <div className="mx-auto flex max-w-page flex-col gap-3 px-gutter py-3">
           <div className="flex items-center justify-between gap-3">
             <div>
               <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Vinyle Collection</h1>
-              <p className="text-xs text-white/60 sm:text-sm">
+              <p className="text-xs text-fg-subtle sm:text-sm">
                 {collectionsFiltered.length} album{collectionsFiltered.length > 1 ? "s" : ""}
               </p>
             </div>
@@ -59,7 +59,7 @@ function App() {
               type="button"
               onClick={openRandom}
               disabled={collectionsFiltered.length === 0}
-              className="shrink-0 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black shadow-lg transition hover:bg-white/90 active:scale-95 disabled:opacity-40"
+              className="shrink-0 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-fg shadow-lg shadow-shadow transition hover:bg-primary-hover active:scale-95 disabled:opacity-40"
             >
               🎲 Random
             </button>
@@ -68,7 +68,7 @@ function App() {
           {/* Filtre par genre : des "chips" qui défilent horizontalement sur mobile. */}
           <nav
             aria-label="Filtrer par genre"
-            className="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0"
+            className="-mx-gutter overflow-x-auto px-gutter [scrollbar-width:none] sm:mx-0 sm:px-0"
           >
             <div className="flex w-max gap-2 sm:w-auto sm:flex-wrap">
               {[ALL, ...categories].map((categorie) => {
@@ -81,8 +81,8 @@ function App() {
                     onClick={() => setCategorieSelected(categorie)}
                     className={`whitespace-nowrap rounded-full border px-3 py-1 text-sm transition ${
                       active
-                        ? "border-white bg-white text-black"
-                        : "border-white/20 bg-white/5 text-white/80 hover:bg-white/15"
+                        ? "border-primary bg-primary text-primary-fg"
+                        : "border-surface-border bg-surface text-fg-muted hover:bg-surface-hover"
                     }`}
                   >
                     {categorie === ALL ? "Tous" : categorie}
@@ -95,7 +95,7 @@ function App() {
       </header>
 
       {/* Grille de pochettes : 2 colonnes sur téléphone, jusqu'à 6 sur grand écran. */}
-      <main className="mx-auto grid max-w-7xl grid-cols-2 gap-x-4 gap-y-6 px-4 py-6 sm:grid-cols-3 sm:px-6 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+      <main className="mx-auto grid max-w-page grid-cols-2 gap-x-4 gap-y-6 px-gutter py-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
         {collectionsFiltered.map((collection) => (
           <Item key={`${collection.id}-${collection.user_name}`} item={collection} />
         ))}
