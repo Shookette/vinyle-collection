@@ -1,38 +1,34 @@
-import { useEffect, type FC } from "react";
-import type { ItemType } from "../../types/collection";
-
-type RandomModalProps = {
-  item: ItemType;
-  onClose: () => void;
-  onReroll: () => void;
-};
+import type { FC, KeyboardEvent } from "react";
+import { useRandom } from "../../context/RandomContext";
 
 // Modale "Now Playing" : la pochette floutée sert de fond, avec un panneau en verre par-dessus.
-const RandomModal: FC<RandomModalProps> = ({ item, onClose, onReroll }) => {
-  const { title, artists, year, genres, styles, cover_image } = item.basic_information;
+// Elle est affichée à la racine de l'app (main.tsx) et s'ouvre dès qu'un album est tiré au hasard.
+const RandomModal: FC = () => {
+  const { randomItem, reroll, closeRandom } = useRandom();
 
-  // Fermer avec la touche Échap, et bloquer le défilement de la page tant que la modale est ouverte.
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", onKeyDown);
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+  if (!randomItem) {
+    return null;
+  }
 
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [onClose]);
+  const { title, artists, year, genres, styles, cover_image } = randomItem.basic_information;
+
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "Escape") {
+      closeRandom();
+    }
+  };
 
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-label={`Album au hasard : ${title}`}
-      className="fixed inset-0 z-40 flex items-center justify-center overflow-hidden p-4"
-      onClick={onClose}
+      // tabIndex + autoFocus : la modale prend le focus à l'ouverture, pour recevoir la touche Échap.
+      tabIndex={-1}
+      autoFocus
+      onKeyDown={onKeyDown}
+      onClick={closeRandom}
+      className="fixed inset-0 z-40 flex items-center justify-center overflow-hidden p-4 outline-none"
     >
       {/* Fond : la pochette agrandie et très floutée, puis un voile sombre pour garder le texte lisible. */}
       <img src={cover_image} alt="" aria-hidden className="absolute inset-0 size-full scale-125 object-cover blur-bg" />
@@ -65,19 +61,19 @@ const RandomModal: FC<RandomModalProps> = ({ item, onClose, onReroll }) => {
             ))}
           </div>
 
-          <p className="text-sm text-fg-subtle">Collection de {item.user_name}</p>
+          <p className="text-sm text-fg-subtle">Collection de {randomItem.user_name}</p>
 
           <div className="flex gap-3">
             <button
               type="button"
-              onClick={onReroll}
+              onClick={reroll}
               className="flex-1 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-fg transition hover:bg-primary-hover active:scale-95"
             >
               🎲 Un autre
             </button>
             <button
               type="button"
-              onClick={onClose}
+              onClick={closeRandom}
               className="flex-1 rounded-full border border-surface-border px-4 py-2.5 text-sm font-semibold transition hover:bg-surface active:scale-95"
             >
               Fermer

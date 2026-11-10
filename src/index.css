@@ -125,3 +125,8 @@ html {
 body {
   min-height: 100dvh;
 }
+
+/* Bloque le défilement de la page tant qu'une modale est affichée. */
+html:has([aria-modal="true"]) {
+  overflow: hidden;
+}

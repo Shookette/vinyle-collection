@@ -1,21 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import type { ItemType } from "./types/collection";
 import { fetchAllItemsForAllCollection } from "./hooks/fetchCollection";
 import Item from "./components/Item/Item";
 import Background from "./components/Background/Background";
-import RandomModal from "./components/RandomModal/RandomModal";
+import GenreFilter from "./components/GenreFilter/GenreFilter";
 import { useLoading } from "./context/LoadingContext";
-
-const ALL = "tous";
-
-const pickRandom = (items: ItemType[]): ItemType | undefined => items[Math.floor(Math.random() * items.length)];
+import { useRandom } from "./context/RandomContext";
 
 function App() {
   const { setLoading } = useLoading();
   const [collections, setCollections] = useState<ItemType[]>([]);
-  const [categorieSelected, setCategorieSelected] = useState<string>(ALL);
-  const [randomItem, setRandomItem] = useState<ItemType | undefined>();
+  const { showRandom } = useRandom();
+  const [categorieSelected, setCategorieSelected] = useState<string | undefined>();
 
   const categories = useMemo(
     () => [...new Set(collections.flatMap((item) => item.basic_information.genres))].sort(),
@@ -24,7 +21,7 @@ function App() {
 
   const collectionsFiltered = useMemo(
     () =>
-      categorieSelected === ALL
+      categorieSelected === undefined
         ? collections
         : collections.filter((item) => item.basic_information.genres.includes(categorieSelected)),
     [collections, categorieSelected],
@@ -36,10 +33,6 @@ function App() {
       .then((data) => setCollections(data))
       .finally(() => setLoading(false));
   }, [setLoading]);
-
-  // Tire un album au hasard parmi ceux affichés (donc en respectant le filtre).
-  const openRandom = useCallback(() => setRandomItem(pickRandom(collectionsFiltered)), [collectionsFiltered]);
-  const closeRandom = useCallback(() => setRandomItem(undefined), []);
 
   return (
     <>
@@ -57,7 +50,8 @@ function App() {
             </div>
             <button
               type="button"
-              onClick={openRandom}
+              // Tire un album parmi ceux affichés, donc en respectant le filtre.
+              onClick={() => showRandom(collectionsFiltered)}
               disabled={collectionsFiltered.length === 0}
               className="shrink-0 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-fg shadow-lg shadow-shadow transition hover:bg-primary-hover active:scale-95 disabled:opacity-40"
             >
@@ -65,32 +59,7 @@ function App() {
             </button>
           </div>
 
-          {/* Filtre par genre : des "chips" qui défilent horizontalement sur mobile. */}
-          <nav
-            aria-label="Filtrer par genre"
-            className="-mx-gutter overflow-x-auto px-gutter [scrollbar-width:none] sm:mx-0 sm:px-0"
-          >
-            <div className="flex w-max gap-2 sm:w-auto sm:flex-wrap">
-              {[ALL, ...categories].map((categorie) => {
-                const active = categorie === categorieSelected;
-                return (
-                  <button
-                    key={categorie}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => setCategorieSelected(categorie)}
-                    className={`whitespace-nowrap rounded-full border px-3 py-1 text-sm transition ${
-                      active
-                        ? "border-primary bg-primary text-primary-fg"
-                        : "border-surface-border bg-surface text-fg-muted hover:bg-surface-hover"
-                    }`}
-                  >
-                    {categorie === ALL ? "Tous" : categorie}
-                  </button>
-                );
-              })}
-            </div>
-          </nav>
+          <GenreFilter genres={categories} selected={categorieSelected} onSelect={setCategorieSelected} />
         </div>
       </header>
 
@@ -100,8 +69,6 @@ function App() {
           <Item key={`${collection.id}-${collection.user_name}`} item={collection} />
         ))}
       </main>
-
-      {randomItem && <RandomModal item={randomItem} onClose={closeRandom} onReroll={openRandom} />}
     </>
   );
 }
